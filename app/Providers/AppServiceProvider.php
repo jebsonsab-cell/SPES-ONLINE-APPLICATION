@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use App\Mail\Transport\GoogleAppsScriptTransport;
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Support\Facades\URL;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\RateLimiter;
@@ -34,6 +35,10 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        if (config('app.env') === 'production') {
+            URL::forceScheme('https');
+        }
+
         Mail::extend('google-apps-script', function (array $config = []): GoogleAppsScriptTransport {
             return new GoogleAppsScriptTransport(
                 (string) config('services.google_apps_script.url', ''),
