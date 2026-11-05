@@ -19,7 +19,7 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withMiddleware(function (Middleware $middleware): void {
         $middleware->preventRequestsDuringMaintenance(['/healthz']);
         $middleware->trustProxies(
-            at: env('TRUSTED_PROXIES') ?: null,
+            at: env('TRUSTED_PROXIES') ?: (env('RAILWAY_ENVIRONMENT') ? '*' : null),
             headers: HttpRequest::HEADER_X_FORWARDED_FOR
                 | HttpRequest::HEADER_X_FORWARDED_HOST
                 | HttpRequest::HEADER_X_FORWARDED_PORT
